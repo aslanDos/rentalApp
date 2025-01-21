@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rentalapp/colors.dart';
+import 'package:rentalapp/data.dart';
+import 'package:rentalapp/models/car_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
   int _selectedCategory = 0;
   final categories = [
     'ALl',
@@ -30,8 +32,8 @@ class _HomePageState extends State<HomePage> {
             children: [
               //-----------     Header      -----------
               Container(
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.all(20),
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
                       AppColors.primary,
@@ -51,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
+                        const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -77,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                             shape: BoxShape.circle,
                             color: Colors.white.withOpacity(0.2),
                           ),
-                          child: Padding(
+                          child: const Padding(
                             padding: EdgeInsets.all(8),
                             child: Icon(
                               Icons.notifications_none_rounded,
@@ -87,9 +89,9 @@ class _HomePageState extends State<HomePage> {
                         )
                       ],
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         color: AppColors.cardBg,
                         borderRadius: BorderRadius.circular(15),
@@ -97,18 +99,18 @@ class _HomePageState extends State<HomePage> {
                           BoxShadow(
                             color: Colors.black.withOpacity(0.5),
                             blurRadius: 10,
-                            offset: Offset(0, 5),
+                            offset: const Offset(0, 5),
                           )
                         ],
                       ),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.search,
                             color: AppColors.textLight,
                           ),
-                          SizedBox(width: 10),
-                          Expanded(
+                          const SizedBox(width: 10),
+                          const Expanded(
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: "Search for your dream car",
@@ -121,12 +123,12 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               color: AppColors.secondary.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.tune,
                               color: AppColors.secondary,
                               size: 20,
@@ -139,19 +141,19 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              //-----------     Categories      -----------
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    //-----------     Categories      -----------
+                    const SizedBox(
                       height: 30,
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Categories',
                           style: TextStyle(
                             fontSize: 20,
@@ -159,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                             color: AppColors.textDark,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         SizedBox(
@@ -167,16 +169,215 @@ class _HomePageState extends State<HomePage> {
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: categories.length,
-                            itemBuilder: (context, index) {},
+                            itemBuilder: (context, index) {
+                              final _isSelected = _selectedCategory == index;
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _selectedCategory = index;
+                                  });
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(right: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  decoration: BoxDecoration(
+                                    color: _isSelected
+                                        ? AppColors.secondary
+                                        : AppColors.cardBg,
+                                    borderRadius: BorderRadius.circular(25),
+                                    boxShadow: [
+                                      if (_isSelected)
+                                        BoxShadow(
+                                          color: AppColors.secondary
+                                              .withOpacity(0.3),
+                                          blurRadius: 10,
+                                          offset: Offset(0, 5),
+                                        )
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      categories[index],
+                                      style: TextStyle(
+                                        color: _isSelected
+                                            ? Colors.white
+                                            : AppColors.textLight,
+                                        fontWeight: _isSelected
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 30),
+
+                    //-----------     Featured cars      -----------
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Featured cars",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textDark,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                "View All",
+                                style: TextStyle(
+                                    color: AppColors.secondary,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 15),
+                        SizedBox(
+                          height: 300,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: featuredCars.length,
+                            itemBuilder: (context, index) {
+                              return _buildCarCard(featuredCars[index]);
+                            },
                           ),
                         )
                       ],
                     )
                   ],
                 ),
-              )
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCarCard(Car car) {
+    return GestureDetector(
+      onTap: () {
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => CarDetailScreen()))
+      },
+      child: Container(
+        width: 220,
+        margin: EdgeInsets.only(right: 20),
+        decoration: BoxDecoration(
+          color: AppColors.cardBg,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            )
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 140,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: Center(
+                child: Hero(
+                  tag: car.name,
+                  child: Image.asset(
+                    car.imagePath,
+                    height: 120,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    car.brand,
+                    style: TextStyle(
+                      color: AppColors.textLight,
+                      fontSize: 14,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    car.name,
+                    style: TextStyle(
+                      color: AppColors.textDark,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                        size: 18,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        car.rating.toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textDark,
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '\$${car.price}/day',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: AppColors.secondary,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.secondary,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
